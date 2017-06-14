@@ -23,6 +23,12 @@ RUN apk update && \
     apk add supervisor
 ADD www.conf /etc/php7/php-fpm.d/www.conf
 ADD supervisord.conf /etc/supervisord.conf
+# Dirty Workaround incoming!
+# Openshift generates a UID, breaking permissions. Dirty fix:
+RUN chmod 777 -R /var/log && \
+    chmod 777 -R /run/nginx && \
+    chmod 777 -R /var/cache && \
+    chmod 777 -R /var/run
 EXPOSE 8080
 USER nginx
 CMD supervisord -c /etc/supervisord.conf
