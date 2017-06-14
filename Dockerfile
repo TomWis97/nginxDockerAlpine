@@ -23,6 +23,11 @@ RUN apk update && \
     apk add supervisor
 ADD www.conf /etc/php7/php-fpm.d/www.conf
 ADD supervisord.conf /etc/supervisord.conf
+# Fixing permissions
+RUN chgrp -R 0 /var/log && chmod -R g+rwX /var/log && \
+    chgrp -R 0 /run/nginx && chmod -R g+rwX /run/nginx && \
+    chgrp -R 0 /var/cache && chmod -R g+rwX /var/cache && \
+    chgrp -R 0 /var/run && chmod -R g+rwX /var/run
 EXPOSE 8080
 USER nginx
 CMD supervisord -c /etc/supervisord.conf
